@@ -1,7 +1,16 @@
 [package]
 name = "cpu-cli-controller"
 version = "0.2.0"
+authors = ["AlixBernard <alix.bernard9@gmail.com>"]
 edition = "2021"
+
+description = "A Linux CPU controller CLI tool"
+readme = "README.md"
+license = "MIT"
+repository = "https://github.com/AlixBernard/cpu-cli-controller"
+homepage = "https://github.com/AlixBernard/cpu-cli-controller"
+keywords = ["linux", "cpu"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 clap = { version = "4.5.3", features = ["derive"] }
