@@ -13,7 +13,7 @@ pub fn activate_cmd(args: &OptionalCoresArgs) {
     };
     if !core_nums.iter().all(|num| all_core_nums.contains(num)) {
         panic!(
-            "Error: the cores selected must be some of {:?}",
+            "Error: the cores selected must be among {:?}",
             all_core_nums
         );
     }
@@ -31,7 +31,7 @@ pub fn deactivate_cmd(args: &CoresArgs) {
     let mut core_nums = get_nums_from_ranges(args.cores.to_string());
     if !core_nums.iter().all(|num| all_core_nums.contains(num)) {
         panic!(
-            "Error: the cores selected must be some of {:?}",
+            "Error: the cores selected must be among {:?}",
             all_core_nums
         );
     }
@@ -52,7 +52,7 @@ pub fn show_cmd(args: &OptionalCoresArgs) {
     };
     if !core_nums.iter().all(|num| all_core_nums.contains(num)) {
         panic!(
-            "Error: the cores selected must be some of {:?}",
+            "Error: the cores selected must be among {:?}",
             all_core_nums
         );
     }
