@@ -4,13 +4,13 @@ use std::process::Command;
 
 const CORES_PATH: &str = "/sys/devices/system/cpu";
 
-pub fn ranges_are_valid(ranges: &String) -> bool {
+pub fn ranges_are_valid(ranges: &str) -> bool {
     let re = Regex::new(r"^([0-9]+-[0-9]+,|[0-9]+,)*([0-9]+-[0-9]+|[0-9]+)$").unwrap();
-    re.is_match(&ranges)
+    re.is_match(ranges)
 }
 
 pub fn parse_range(range: String) -> Vec<u32> {
-    match range.split_once("-") {
+    match range.split_once('-') {
         Some((a, b)) => {
             let x = match a.parse::<u32>() {
                 Ok(v) => v,
@@ -36,7 +36,7 @@ pub fn parse_range(range: String) -> Vec<u32> {
 pub fn get_nums_from_ranges(ranges: String) -> Vec<u32> {
     let mut nums: Vec<u32> = vec![];
     ranges_are_valid(&ranges);
-    for range in ranges.split(",") {
+    for range in ranges.split(',') {
         nums.append(&mut parse_range(range.to_string()));
     }
     nums
@@ -45,14 +45,14 @@ pub fn get_nums_from_ranges(ranges: String) -> Vec<u32> {
 pub fn get_all_core_nums() -> Vec<u32> {
     let re_cpu_name = Regex::new(r"^cpu[0-9]+$").unwrap();
     let mut all_core_nums: Vec<u32> = vec![];
-    for entry in fs::read_dir(CORES_PATH).expect(&format!("Cannot read {:?}", CORES_PATH)) {
-        let entry = entry.expect(&format!("Entry is wrong"));
+    for entry in fs::read_dir(CORES_PATH).unwrap_or_else(|_| panic!("Cannot read {:?}", CORES_PATH)) {
+        let entry = entry.expect("Entry is wrong");
         let path = entry.path();
         if !path.is_dir() {
             continue;
         }
         let dir_name = path.file_name().expect("").to_str().expect("");
-        if re_cpu_name.is_match(&dir_name) {
+        if re_cpu_name.is_match(dir_name) {
             let num_str = &dir_name[3..];
             all_core_nums.push(
                 num_str
@@ -129,7 +129,7 @@ mod tests {
 
     #[test]
     fn parse_range_correct() {
-        let ranges = vec!["2-5", "0", "11-11", "84"];
+        let ranges = ["2-5", "0", "11-11", "84"];
         let results: Vec<Vec<u32>> = vec![vec![2, 3, 4, 5], vec![0], vec![11], vec![84]];
         for (range, result) in ranges.iter().zip(results.iter()) {
             assert_eq!(&parse_range(range.to_string()), result);
