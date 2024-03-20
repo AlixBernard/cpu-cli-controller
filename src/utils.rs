@@ -35,7 +35,9 @@ pub fn parse_range(range: String) -> Vec<u32> {
 
 pub fn get_nums_from_ranges(ranges: String) -> Vec<u32> {
     let mut nums: Vec<u32> = vec![];
-    ranges_are_valid(&ranges);
+    if !ranges_are_valid(&ranges) {
+        panic!("The ranges '{ranges}' are incorrect, example '1-5,0,41-41'")
+    };
     for range in ranges.split(',') {
         nums.append(&mut parse_range(range.to_string()));
     }
@@ -45,7 +47,8 @@ pub fn get_nums_from_ranges(ranges: String) -> Vec<u32> {
 pub fn get_all_core_nums() -> Vec<u32> {
     let re_cpu_name = Regex::new(r"^cpu[0-9]+$").unwrap();
     let mut all_core_nums: Vec<u32> = vec![];
-    for entry in fs::read_dir(CORES_PATH).unwrap_or_else(|_| panic!("Cannot read {:?}", CORES_PATH)) {
+    for entry in fs::read_dir(CORES_PATH).unwrap_or_else(|_| panic!("Cannot read {:?}", CORES_PATH))
+    {
         let entry = entry.expect("Entry is wrong");
         let path = entry.path();
         if !path.is_dir() {
