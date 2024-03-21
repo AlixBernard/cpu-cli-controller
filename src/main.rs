@@ -33,13 +33,13 @@ struct OptionalCoresArgs {
     cores: Option<String>,
 
     #[arg(
-        short,
+        short = 'D',
         long,
         help = "Remove duplicates of cores specified with the option '--cores'",
         required = false,
         action
     )]
-    no_duplicate: bool,
+    no_duplicates: bool,
 
     #[arg(
         short,
@@ -63,13 +63,13 @@ struct CoresArgs {
     cores: String,
 
     #[arg(
-        short,
+        short = 'D',
         long,
         help = "Remove duplicates of cores specified with the option '--cores'",
         required = false,
         action
     )]
-    no_duplicate: bool,
+    no_duplicates: bool,
 
     #[arg(
         short,

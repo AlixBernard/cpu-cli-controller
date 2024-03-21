@@ -17,7 +17,7 @@ pub fn activate_cmd(args: &OptionalCoresArgs) {
             all_core_nums
         );
     }
-    if args.no_duplicate {
+    if args.no_duplicates {
         let mut core_nums: Vec<_> = core_nums.iter().unique().collect();
     }
     if args.sort {
@@ -35,7 +35,7 @@ pub fn deactivate_cmd(args: &CoresArgs) {
             all_core_nums
         );
     }
-    if args.no_duplicate {
+    if args.no_duplicates {
         let mut core_nums: Vec<_> = core_nums.iter().unique().collect();
     }
     if args.sort {
@@ -56,7 +56,7 @@ pub fn show_cmd(args: &OptionalCoresArgs) {
             all_core_nums
         );
     }
-    if args.no_duplicate {
+    if args.no_duplicates {
         let mut core_nums: Vec<_> = core_nums.iter().unique().collect();
     }
     if args.sort {
