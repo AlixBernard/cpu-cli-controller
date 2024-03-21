@@ -81,15 +81,6 @@ struct CoresArgs {
     sort: bool,
 }
 
-// #[derive(Args, Debug)]
-// struct DisplayArgs {
-//     #[arg(short, long, required = false, action)]
-//     no_duplicate: bool,
-
-//     #[arg(short, long, required = false, action)]
-//     sort: bool,
-// }
-
 #[derive(Subcommand, Debug)]
 enum Commands {
     #[clap(visible_alias = "a")]
