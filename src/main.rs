@@ -8,7 +8,14 @@ use clap::{Args, Parser, Subcommand};
 use commands::{activate_cmd, deactivate_cmd, show_cmd};
 
 #[derive(Parser)]
-#[command(version, about, long_about = None)]
+// #[command(version, about, long_about = None)]
+#[command(
+    name = "cpu-cli-controller",
+    version,
+    about = "A program to control/toggle on-off the CPU cores",
+    after_long_help = "Bugs can be reported on GitHub: https://github.com/AlixBernard/cpu-cli-controller/issues",
+    max_term_width = 98
+)]
 struct Cli {
     #[command(subcommand)]
     command: Commands,
