@@ -97,13 +97,14 @@ pub fn deactivate_cores(core_nums: Vec<u32>) {
 pub fn show_cores(core_nums: Vec<u32>) {
     for n in core_nums {
         if n == 0 {
-            println!("{n}\t1\tAlways on");
+            let core_status = 1;
+            println!("cpu{n:<5}{core_status:<4}Always on");
             continue;
         }
         let fp = format!("{CORES_PATH}/cpu{n}/online");
         let core_str = fs::read_to_string(fp).expect("Cannot read the file");
         let core_status = core_str.get(..1).expect("Cannot find core status");
-        println!("{n}\t{core_status}");
+        println!("cpu{n:<5}{core_status}");
     }
 }
 
