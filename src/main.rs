@@ -23,25 +23,61 @@ struct Cli {
 
 #[derive(Args, Debug)]
 struct OptionalCoresArgs {
-    #[arg(short, long, required = false, value_name = "RANGES")]
+    #[arg(
+        short,
+        long,
+        help = "Specify the cores to consider, eg. '2,3-5,11'",
+        required = false,
+        value_name = "RANGES"
+    )]
     cores: Option<String>,
 
-    #[arg(short, long, required = false, action)]
+    #[arg(
+        short,
+        long,
+        help = "Remove duplicates of cores specified with the option '--cores'",
+        required = false,
+        action
+    )]
     no_duplicate: bool,
 
-    #[arg(short, long, required = false, action)]
+    #[arg(
+        short,
+        long,
+        help = "Sort the cores in increasing order",
+        required = false,
+        action
+    )]
     sort: bool,
 }
 
 #[derive(Args, Debug)]
 struct CoresArgs {
-    #[arg(short, long, required = true, value_name = "RANGES")]
+    #[arg(
+        short,
+        long,
+        help = "Specify the cores to consider, eg. '2,3-5,11'",
+        required = true,
+        value_name = "RANGES"
+    )]
     cores: String,
 
-    #[arg(short, long, required = false, action)]
+    #[arg(
+        short,
+        long,
+        help = "Remove duplicates of cores specified with the option '--cores'",
+        required = false,
+        action
+    )]
     no_duplicate: bool,
 
-    #[arg(short, long, required = false, action)]
+    #[arg(
+        short,
+        long,
+        help = "Sort the cores in increasing order",
+        required = false,
+        action
+    )]
     sort: bool,
 }
 
