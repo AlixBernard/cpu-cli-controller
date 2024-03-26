@@ -1,5 +1,3 @@
-#[allow(dead_code)]
-#[allow(unused)]
 mod commands;
 mod utils;
 
