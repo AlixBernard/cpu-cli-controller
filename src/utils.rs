@@ -28,13 +28,13 @@ impl From<std::num::ParseIntError> for RangeError {
     }
 }
 
-pub fn parse_range(range: String) -> Result<Vec<u32>, RangeError> {
+pub fn parse_range(range: &str) -> Result<Vec<u32>, RangeError> {
     match range.split_once('-') {
         Some((a, b)) => {
             let x = a.parse::<u32>()?;
             let y = b.parse::<u32>()?;
             if x > y {
-                return Err(RangeError::BoundariesError);
+                Err(RangeError::BoundariesError)
             } else {
                 Ok((x..y + 1).collect())
             }
@@ -43,12 +43,10 @@ pub fn parse_range(range: String) -> Result<Vec<u32>, RangeError> {
     }
 }
 
-pub fn get_nums_from_ranges(ranges: String) -> Vec<u32> {
+pub fn get_nums_from_ranges(ranges: &str) -> Vec<u32> {
     let mut nums: Vec<u32> = vec![];
     for range in ranges.split(',') {
-        nums.append(
-            &mut parse_range(range.to_string()).unwrap_or_else(|e| panic!("{:?}: '{range}'", e)),
-        );
+        nums.append(&mut parse_range(range).unwrap_or_else(|e| panic!("{:?}: '{range}'", e)));
     }
     nums
 }
@@ -76,9 +74,9 @@ pub fn get_all_core_nums() -> Vec<u32> {
     all_core_nums
 }
 
-pub fn activate_cores(core_nums: Vec<u32>) {
+pub fn activate_cores(core_nums: &[u32]) {
     for n in core_nums {
-        if n == 0 {
+        if n == &0 {
             continue;
         }
         let fp = format!("{CORES_PATH}/cpu{n}/online");
@@ -92,7 +90,7 @@ pub fn activate_cores(core_nums: Vec<u32>) {
     }
 }
 
-pub fn deactivate_cores(core_nums: Vec<u32>) {
+pub fn deactivate_cores(core_nums: &[u32]) {
     if core_nums.contains(&0) {
         panic!("Cannot deactivate core 0")
     }
@@ -108,9 +106,9 @@ pub fn deactivate_cores(core_nums: Vec<u32>) {
     }
 }
 
-pub fn show_cores(core_nums: Vec<u32>) {
+pub fn show_cores(core_nums: &[u32]) {
     for n in core_nums {
-        if n == 0 {
+        if n == &0 {
             let core_status = 1;
             println!("cpu{n:<5}{core_status:<4}Always on");
             continue;
@@ -138,7 +136,7 @@ mod tests {
         let ranges = ["2-5", "0", "11-11", "84"];
         let results = [vec![2, 3, 4, 5], vec![0], vec![11], vec![84]];
         for (range, result) in ranges.iter().zip(results.iter()) {
-            assert_eq!(&parse_range(range.to_string()).unwrap(), result);
+            assert_eq!(&parse_range(range).unwrap(), result);
         }
     }
     #[test]
@@ -146,7 +144,7 @@ mod tests {
         let ranges = ["2f", "-", "0-?", "-4"];
         for range in ranges {
             assert!(matches!(
-                &parse_range(range.to_string()).unwrap_err(),
+                &parse_range(range).unwrap_err(),
                 RangeError::ParseIntError
             ));
         }
@@ -156,7 +154,7 @@ mod tests {
         let ranges = ["1-0"];
         for range in ranges {
             assert!(matches!(
-                &parse_range(range.to_string()).unwrap_err(),
+                &parse_range(range).unwrap_err(),
                 RangeError::BoundariesError
             ));
         }
@@ -164,7 +162,7 @@ mod tests {
 
     #[test]
     fn get_nums_from_ranges_correct() {
-        let range = "2-5,1,9-11,31-31,0,55".to_string();
+        let range = "2-5,1,9-11,31-31,0,55";
         assert_eq!(
             get_nums_from_ranges(range),
             vec![2, 3, 4, 5, 1, 9, 10, 11, 31, 0, 55]
