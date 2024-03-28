@@ -74,40 +74,51 @@ pub fn get_all_core_nums() -> Vec<u32> {
     all_core_nums
 }
 
-pub fn activate_cores(core_nums: &[u32]) {
-    for n in core_nums {
-        if n == &0 {
-            continue;
+pub enum CoreStatus {
+    Off,
+    On,
+}
+
+impl CoreStatus {
+    pub fn value(&self) -> u8 {
+        match *self {
+            CoreStatus::Off => 0,
+            CoreStatus::On => 1,
         }
-        let fp = format!("{CORES_PATH}/cpu{n}/online");
-        match Command::new("sudo")
-            .args(["su", "-c", &format!("echo 1 > '{fp}'")])
-            .output()
-        {
-            Ok(_) => (),
-            Err(_) => println!("failed to execute: sudo su -c \"echo 1 > '{fp}'\""),
+    }
+
+    pub fn _name(&self) -> String {
+        match *self {
+            CoreStatus::Off => "off".to_string(),
+            CoreStatus::On => "on".to_string(),
         }
     }
 }
 
-pub fn deactivate_cores(core_nums: &[u32]) {
-    if core_nums.contains(&0) {
-        panic!("Cannot deactivate core 0")
-    }
+/// Set a status for specified cores.
+/// A status of `false` (or `0`) means off and `true` (or `1`) means on.
+pub fn set_cores_status(status: CoreStatus, core_nums: &[u32]) {
+    let status_str = status.value();
     for n in core_nums {
+        // Skip cpu0 as it is always on and cannot be modified
+        if n == &0 {
+            continue;
+        }
+
         let fp = format!("{CORES_PATH}/cpu{n}/online");
         match Command::new("sudo")
-            .args(["su", "-c", &format!("echo 0 > '{fp}'")])
+            .args(["su", "-c", &format!("echo {status_str} > '{fp}'")])
             .output()
         {
             Ok(_) => (),
-            Err(_) => println!("failed to execute: sudo su -c \"echo 0 > '{fp}'\""),
+            Err(_) => println!("Failed to execute: sudo su -c \"echo {status_str} > '{fp}'\""),
         }
     }
 }
 
 pub fn show_cores(core_nums: &[u32]) {
     for n in core_nums {
+        // cpu0 is always on and the file 'CORES_PATH/cpu0/online' does not exist
         if n == &0 {
             let core_status = 1;
             println!("cpu{n:<5}{core_status:<4}Always on");
@@ -128,8 +139,7 @@ mod tests {
     use crate::utils::get_all_core_nums;
     use crate::utils::get_nums_from_ranges;
     use crate::utils::parse_range;
-
-    use super::RangeError;
+    use crate::utils::RangeError;
 
     #[test]
     fn parse_range_correct() {
@@ -171,6 +181,8 @@ mod tests {
 
     #[test]
     fn get_all_core_nums_at_least_0() {
+        // Should run successfully on any machine as any machine should have
+        // at least 1 CPU (cpu0)
         assert!(get_all_core_nums().contains(&0));
     }
 }

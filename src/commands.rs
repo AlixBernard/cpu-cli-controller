@@ -1,7 +1,7 @@
 use itertools::Itertools;
 
 use crate::utils::{
-    activate_cores, deactivate_cores, get_all_core_nums, get_nums_from_ranges, show_cores,
+    get_all_core_nums, get_nums_from_ranges, set_cores_status, show_cores, CoreStatus,
 };
 use crate::{CoresArgs, OptionalCoresArgs};
 
@@ -26,7 +26,7 @@ pub fn activate_cmd(args: &OptionalCoresArgs) {
             all_core_nums
         );
     }
-    activate_cores(&core_nums);
+    set_cores_status(CoreStatus::On, &core_nums);
 }
 
 pub fn deactivate_cmd(args: &CoresArgs) {
@@ -47,7 +47,10 @@ pub fn deactivate_cmd(args: &CoresArgs) {
             all_core_nums
         );
     }
-    deactivate_cores(&core_nums);
+    if core_nums.contains(&0) {
+        panic!("Cannot deactivate core 0")
+    }
+    set_cores_status(CoreStatus::Off, &core_nums);
 }
 
 pub fn show_cmd(args: &OptionalCoresArgs) {
